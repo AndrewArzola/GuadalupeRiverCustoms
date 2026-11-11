@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Store | Guadalupe River Customs</title>
+  <meta name="description" content="Stark Varg SM/EX subcage, built in Seguin, Texas by Guadalupe River Customs. $400 plus shipping, ships anywhere in the USA.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Guadalupe River Customs home">
+        <span class="brand-mark">GRC</span>
+        <span class="brand-name">Guadalupe River Customs</span>
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="nav-links" class="nav-links">
+        <a href="index.html#services">Services</a>
+        <a href="index.html#work">Our Work</a>
+        <a href="index.html#about">About</a>
+        <a href="store.html" aria-current="page">Store</a>
+        <a href="index.html#contact" class="btn btn-small">Get a Quote</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <div class="container">
+        <p class="eyebrow">Store</p>
+        <h1>Parts we build</h1>
+        <p class="lead">Made in Seguin, Texas. Ships anywhere in the USA.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container product">
+        <div class="product-media">
+          <!-- Replace with a real photo: images/store/varg-subcage.jpg -->
+          <img src="images/store/varg-subcage.jpg" alt="Stark Varg SM/EX subcage" data-fallback>
+        </div>
+        <div class="product-info">
+          <p class="eyebrow">Electric / Stark Varg</p>
+          <h2>Stark Varg SM/EX Subcage</h2>
+          <p class="price">$400 <span>+ shipping</span></p>
+          <p>A welded subcage for the Stark Varg SM and EX, built in our shop. It protects the rear of the bike and is made to take abuse on the road and the trail.</p>
+          <ul class="spec-list">
+            <li>Fits Stark Varg SM and EX</li>
+            <li>Welded by hand in Seguin, TX</li>
+            <li>Ships anywhere in the USA</li>
+            <li>We confirm shipping cost before you pay</li>
+          </ul>
+
+          <form class="form order-form" data-mailto-form data-subject="Order: Stark Varg SM/EX Subcage">
+            <input type="hidden" name="Product" value="Stark Varg SM/EX Subcage ($400 + shipping)">
+            <div class="form-row">
+              <label>Model
+                <select name="Model" required>
+                  <option value="">Select model</option>
+                  <option>Varg SM</option>
+                  <option>Varg EX</option>
+                </select>
+              </label>
+              <label>Quantity<input name="Quantity" type="number" min="1" value="1" required data-qty></label>
+            </div>
+            <label>Full name<input name="Name" required autocomplete="name"></label>
+            <div class="form-row">
+              <label>Email<input name="Email" type="email" required autocomplete="email"></label>
+              <label>Phone<input name="Phone" type="tel" autocomplete="tel"></label>
+            </div>
+            <label>Shipping address<textarea name="Shipping address" rows="3" required autocomplete="street-address" placeholder="Street, City, State, ZIP"></textarea></label>
+            <label>Notes<textarea name="Notes" rows="2"></textarea></label>
+            <p class="order-total">Subtotal: <strong data-subtotal>$400</strong> + shipping</p>
+            <button type="submit" class="btn btn-block">Place Order Request</button>
+            <p class="form-note">This opens your email app with your order details filled in. We'll reply with your shipping cost and a payment link. Nothing is charged until you approve the total.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span data-year></span> Guadalupe River Customs &middot; Seguin, Texas</p>
+      <nav><a href="index.html#services">Services</a><a href="index.html#work">Our Work</a><a href="store.html">Store</a></nav>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
