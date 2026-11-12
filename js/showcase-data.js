@@ -205,8 +205,8 @@ window.SHOWCASE_PROJECTS = [
       {
         "type": "image",
         "src": "images/web/showcase/wheelie-bar/img-5323.jpg",
-        "w": 1200,
-        "h": 1600
+        "w": 1600,
+        "h": 1200
       },
       {
         "type": "image",
