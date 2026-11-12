@@ -41,9 +41,18 @@
 
     <section class="section">
       <div class="container product">
-        <div class="product-media">
-          <!-- Replace with a real photo: images/store/varg-subcage.jpg -->
-          <img src="images/store/varg-subcage.jpg" alt="Stark Varg SM/EX subcage" data-fallback>
+        <div class="product-gallery" data-gallery>
+          <!-- Photos are web-sized copies of images/store/StarkSubCage/. After changing them, run: python tools/build_images.py -->
+          <div class="product-media">
+            <img src="images/web/store/starksubcage/img-8784.jpg" alt="Stark Varg subcage, photo 1" data-gallery-main>
+          </div>
+          <div class="product-thumbs">
+            <button type="button" aria-current="true"><img src="images/web/store/starksubcage/img-8784.jpg" alt="Show photo 1" loading="lazy"></button>
+            <button type="button"><img src="images/web/store/starksubcage/img-8785.jpg" alt="Show photo 2" loading="lazy"></button>
+            <button type="button"><img src="images/web/store/starksubcage/img-8786.jpg" alt="Show photo 3" loading="lazy"></button>
+            <button type="button"><img src="images/web/store/starksubcage/img-8788.jpg" alt="Show photo 4" loading="lazy"></button>
+            <button type="button"><img src="images/web/store/starksubcage/img-8796.jpg" alt="Show photo 5" loading="lazy"></button>
+          </div>
         </div>
         <div class="product-info">
           <p class="eyebrow">Electric / Stark Varg</p>
@@ -53,32 +62,50 @@
           <ul class="spec-list">
             <li>Fits Stark Varg SM and EX</li>
             <li>Welded by hand in Seguin, TX</li>
+            <li>Optional license plate, blinker and foot plate mounts</li>
             <li>Ships anywhere in the USA</li>
             <li>We confirm shipping cost before you pay</li>
           </ul>
 
-          <form class="form order-form" data-mailto-form data-subject="Order: Stark Varg SM/EX Subcage">
-            <input type="hidden" name="Product" value="Stark Varg SM/EX Subcage ($400 + shipping)">
+          <form class="form order-form" action="https://formspree.io/f/mvkaobnk" method="POST" data-formspree
+                data-success="Thanks! Your order request was sent. We'll email you the shipping cost and a payment link.">
+            <input type="hidden" name="_subject" value="Order request: Stark Varg SM/EX Subcage">
+            <input type="hidden" name="product" value="Stark Varg SM/EX Subcage ($400 + shipping)">
             <div class="form-row">
               <label>Model
-                <select name="Model" required>
+                <select name="model" required>
                   <option value="">Select model</option>
                   <option>Varg SM</option>
                   <option>Varg EX</option>
                 </select>
               </label>
-              <label>Quantity<input name="Quantity" type="number" min="1" value="1" required data-qty></label>
+              <label>Quantity<input name="quantity" type="number" min="1" value="1" required data-qty></label>
             </div>
-            <label>Full name<input name="Name" required autocomplete="name"></label>
+
+            <fieldset class="addons">
+              <legend>Mounts &amp; add-ons <span>(optional)</span></legend>
+              <label class="check"><input type="checkbox" name="license_plate_mount" value="Yes"> License plate mount</label>
+              <label class="check"><input type="checkbox" name="blinker_mount" value="Yes"> Blinker mount</label>
+              <label class="check"><input type="checkbox" name="foot_plate" value="Yes" data-footplate> Foot plate</label>
+              <div class="notice" data-footplate-notice hidden>
+                <p><strong>Heads up:</strong> the foot plate requires cutting the plastics on your Stark to fit.</p>
+                <label class="check"><input type="checkbox" name="foot_plate_cut_ok" value="Yes, I understand the plastics must be cut" data-footplate-ack> I understand I'll need to cut my Stark's plastics</label>
+              </div>
+              <p class="field-note">We'll confirm add-on pricing with your shipping quote.</p>
+            </fieldset>
+
+            <label>Full name<input name="name" required autocomplete="name"></label>
             <div class="form-row">
-              <label>Email<input name="Email" type="email" required autocomplete="email"></label>
-              <label>Phone<input name="Phone" type="tel" autocomplete="tel"></label>
+              <label>Email<input name="email" type="email" required autocomplete="email"></label>
+              <label>Phone<input name="phone" type="tel" autocomplete="tel"></label>
             </div>
-            <label>Shipping address<textarea name="Shipping address" rows="3" required autocomplete="street-address" placeholder="Street, City, State, ZIP"></textarea></label>
-            <label>Notes<textarea name="Notes" rows="2"></textarea></label>
+            <label>Shipping address<textarea name="shipping_address" rows="3" required autocomplete="street-address" placeholder="Street, City, State, ZIP"></textarea></label>
+            <label>Notes<textarea name="notes" rows="2"></textarea></label>
+            <input type="hidden" name="subtotal" value="$400 + shipping" data-subtotal-field>
             <p class="order-total">Subtotal: <strong data-subtotal>$400</strong> + shipping</p>
             <button type="submit" class="btn btn-block">Place Order Request</button>
-            <p class="form-note">This opens your email app with your order details filled in. We'll reply with your shipping cost and a payment link. Nothing is charged until you approve the total.</p>
+            <p class="form-status" role="status" aria-live="polite"></p>
+            <p class="form-note">We'll reply with your shipping cost and a payment link. Nothing is charged until you approve the total.</p>
           </form>
         </div>
       </div>

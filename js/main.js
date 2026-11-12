@@ -1,7 +1,5 @@
 // Guadalupe River Customs - site scripts
 (function () {
-  // TODO: set this to the shop's real email address. Order and quote forms are sent here.
-  var SHOP_EMAIL = "info@guadaluperivercustoms.com";
   var UNIT_PRICE = 400;
 
   // Footer year
@@ -25,47 +23,109 @@
     });
   }
 
-  // Show a styled placeholder when an image hasn't been uploaded yet
-  function markPlaceholder(img, holder) {
-    function fail() { holder.classList.add("is-placeholder"); }
-    if (img.complete && img.naturalWidth === 0) fail();
-    img.addEventListener("error", fail);
-  }
-  document.querySelectorAll(".carousel-slide img").forEach(function (img) {
-    markPlaceholder(img, img.closest(".carousel-slide"));
-  });
-  document.querySelectorAll("img[data-fallback]").forEach(function (img) {
-    markPlaceholder(img, img.parentElement);
-  });
-
-  // Carousel
-  document.querySelectorAll("[data-carousel]").forEach(function (root) {
+  // Showcase: one tab per project folder, each with its own photo carousel
+  var projects = window.SHOWCASE_PROJECTS || [];
+  var root = document.querySelector("[data-carousel]");
+  var tabsWrap = document.querySelector("[data-project-tabs]");
+  if (root && tabsWrap && projects.length) {
     var track = root.querySelector(".carousel-track");
-    var slides = Array.prototype.slice.call(root.querySelectorAll(".carousel-slide"));
-    var dotsWrap = root.querySelector(".carousel-dots");
+    var count = root.querySelector(".carousel-count");
+    var thumbsWrap = document.querySelector(".carousel-thumbs");
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var slides = [];
+    var thumbs = [];
     var index = 0;
     var timer = null;
-    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var current = null;
 
-    var dots = slides.map(function (_, i) {
+    var tabs = projects.map(function (p) {
       var b = document.createElement("button");
       b.type = "button";
       b.setAttribute("role", "tab");
-      b.setAttribute("aria-label", "Slide " + (i + 1));
-      b.addEventListener("click", function () { go(i); restart(); });
-      dotsWrap.appendChild(b);
+      b.textContent = p.title;
+      b.addEventListener("click", function () { showProject(p); restart(); });
+      tabsWrap.appendChild(b);
       return b;
     });
 
+    function showProject(p) {
+      current = p;
+      tabs.forEach(function (t, i) { t.setAttribute("aria-selected", String(projects[i] === p)); });
+      track.innerHTML = "";
+      thumbsWrap.innerHTML = "";
+      slides = p.items.map(function (item, i) {
+        var li = document.createElement("li");
+        li.className = "carousel-slide";
+        var label = p.title + ", " + (item.type === "video" ? "video" : "photo") + " " + (i + 1);
+        var media;
+        if (item.type === "video") {
+          media = document.createElement("video");
+          media.controls = true;
+          media.playsInline = true;
+          media.preload = "metadata";
+          media.setAttribute("aria-label", label);
+          media.addEventListener("play", stop);
+        } else {
+          media = document.createElement("img");
+          media.alt = label;
+          media.decoding = "async";
+        }
+        media.setAttribute("data-src", item.src);
+        li.appendChild(media);
+        track.appendChild(li);
+        return li;
+      });
+      thumbs = p.items.map(function (item, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("aria-label", "Show " + (item.type === "video" ? "video" : "photo") + " " + (i + 1));
+        if (item.type === "video") {
+          b.className = "is-video";
+        } else {
+          var img = document.createElement("img");
+          img.src = item.src;
+          img.alt = "";
+          img.loading = "lazy";
+          b.appendChild(img);
+        }
+        b.addEventListener("click", function () { go(i); restart(); });
+        thumbsWrap.appendChild(b);
+        return b;
+      });
+      track.style.transition = "none";
+      go(0);
+      void track.offsetWidth;
+      track.style.transition = "";
+    }
+
+    function load(i) {
+      var s = slides[i];
+      if (!s) return;
+      var m = s.firstChild;
+      var src = m.getAttribute("data-src");
+      if (src) { m.src = src; m.removeAttribute("data-src"); }
+    }
+
     function go(i) {
-      index = (i + slides.length) % slides.length;
+      var n = slides.length;
+      if (!n) return;
+      var prevSlide = slides[index];
+      index = (i + n) % n;
+      if (prevSlide && prevSlide.firstChild.tagName === "VIDEO") prevSlide.firstChild.pause();
+      load(index); load((index + 1) % n); load((index - 1 + n) % n);
       track.style.transform = "translateX(" + -index * 100 + "%)";
-      dots.forEach(function (d, j) { d.setAttribute("aria-selected", String(j === index)); });
       slides.forEach(function (s, j) { s.setAttribute("aria-hidden", String(j !== index)); });
+      thumbs.forEach(function (t, j) { t.setAttribute("aria-current", String(j === index)); });
+      var active = thumbs[index];
+      if (active) thumbsWrap.scrollTo({ left: active.offsetLeft - thumbsWrap.clientWidth / 2 + active.clientWidth / 2, behavior: reduceMotion ? "auto" : "smooth" });
+      count.textContent = current.title + " · " + (index + 1) + " / " + n;
     }
     function next() { go(index + 1); }
     function prev() { go(index - 1); }
-    function start() { if (!reduceMotion && slides.length > 1) timer = setInterval(next, 6000); }
+    function start() {
+      var onVideo = slides[index] && slides[index].firstChild.tagName === "VIDEO";
+      if (!reduceMotion && !timer && slides.length > 1 && !onVideo) timer = setInterval(next, 6000);
+    }
     function stop() { clearInterval(timer); timer = null; }
     function restart() { stop(); start(); }
 
@@ -92,36 +152,86 @@
       start();
     });
 
-    go(0);
+    showProject(projects[0]);
     start();
+  }
+
+  // Store product gallery
+  document.querySelectorAll("[data-gallery]").forEach(function (g) {
+    var main = g.querySelector("[data-gallery-main]");
+    var buttons = g.querySelectorAll(".product-thumbs button");
+    buttons.forEach(function (b, i) {
+      b.addEventListener("click", function () {
+        main.src = b.querySelector("img").src;
+        main.alt = "Stark Varg subcage, photo " + (i + 1);
+        buttons.forEach(function (o) { o.removeAttribute("aria-current"); });
+        b.setAttribute("aria-current", "true");
+      });
+    });
   });
 
   // Order subtotal
   var qty = document.querySelector("[data-qty]");
   var subtotal = document.querySelector("[data-subtotal]");
+  var subtotalField = document.querySelector("[data-subtotal-field]");
   if (qty && subtotal) {
     var update = function () {
       var n = Math.max(1, parseInt(qty.value, 10) || 1);
       subtotal.textContent = "$" + (n * UNIT_PRICE).toLocaleString();
+      if (subtotalField) subtotalField.value = subtotal.textContent + " + shipping (add-ons quoted separately)";
     };
     qty.addEventListener("input", update);
     update();
   }
 
-  // Forms -> pre-filled email (no server needed)
-  document.querySelectorAll("[data-mailto-form]").forEach(function (form) {
+  // Foot plate: show the plastics warning and require the customer to acknowledge it
+  var footplate = document.querySelector("[data-footplate]");
+  var notice = document.querySelector("[data-footplate-notice]");
+  var ack = document.querySelector("[data-footplate-ack]");
+  if (footplate && notice && ack) {
+    var sync = function () {
+      notice.hidden = !footplate.checked;
+      ack.required = footplate.checked;
+      if (!footplate.checked) ack.checked = false;
+    };
+    footplate.addEventListener("change", sync);
+    sync();
+  }
+
+  // Forms -> Formspree (AJAX). Without JavaScript the form still posts to Formspree normally.
+  document.querySelectorAll("[data-formspree]").forEach(function (form) {
+    var status = form.querySelector(".form-status");
+    var button = form.querySelector("button[type=submit]");
+    function setStatus(msg, kind) {
+      status.textContent = msg;
+      status.className = "form-status" + (kind ? " is-" + kind : "");
+    }
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!form.reportValidity()) return;
-      var lines = [];
-      new FormData(form).forEach(function (value, key) {
-        if (String(value).trim()) lines.push(key + ": " + value);
-      });
-      if (subtotal && form.contains(subtotal)) lines.push("Subtotal: " + subtotal.textContent + " + shipping");
-      var subject = form.getAttribute("data-subject") || "Website inquiry";
-      window.location.href = "mailto:" + SHOP_EMAIL +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(lines.join("\n"));
+      button.disabled = true;
+      setStatus("Sending…");
+      fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (data) {
+            if (!res.ok) {
+              var msg = data.errors && data.errors.length
+                ? data.errors.map(function (er) { return er.message; }).join(" ")
+                : "Something went wrong.";
+              throw new Error(msg);
+            }
+          });
+        })
+        .then(function () {
+          form.reset();
+          if (qty) qty.dispatchEvent(new Event("input"));
+          if (footplate) footplate.dispatchEvent(new Event("change"));
+          setStatus(form.getAttribute("data-success") || "Thanks! Your message was sent.", "success");
+        })
+        .catch(function (err) {
+          setStatus(err.message + " Please try again, or email Nick@guadalupeRiverCustoms.com.", "error");
+        })
+        .then(function () { button.disabled = false; });
     });
   });
 })();

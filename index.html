@@ -80,36 +80,17 @@
       <div class="container">
         <p class="eyebrow">Showcase</p>
         <h2>Previous work</h2>
-        <!-- To add photos: drop images into images/showcase/ and update the src/alt/caption below. -->
+        <!-- Projects come from the folders in images/showcase/. After adding photos, run: python tools/build_images.py -->
+        <div class="project-tabs" role="tablist" aria-label="Projects" data-project-tabs></div>
         <div class="carousel" data-carousel aria-roledescription="carousel" aria-label="Previous work">
           <div class="carousel-viewport">
-            <ul class="carousel-track">
-              <li class="carousel-slide">
-                <img src="images/showcase/work-1.jpg" alt="Custom build 1">
-                <p class="carousel-caption">Custom build</p>
-              </li>
-              <li class="carousel-slide">
-                <img src="images/showcase/work-2.jpg" alt="Custom build 2">
-                <p class="carousel-caption">Frame &amp; fabrication</p>
-              </li>
-              <li class="carousel-slide">
-                <img src="images/showcase/work-3.jpg" alt="Custom build 3">
-                <p class="carousel-caption">Welding detail</p>
-              </li>
-              <li class="carousel-slide">
-                <img src="images/showcase/work-4.jpg" alt="Custom build 4">
-                <p class="carousel-caption">Stark Varg subcage</p>
-              </li>
-              <li class="carousel-slide">
-                <img src="images/showcase/work-5.jpg" alt="Custom build 5">
-                <p class="carousel-caption">Finished build</p>
-              </li>
-            </ul>
+            <ul class="carousel-track"></ul>
           </div>
-          <button class="carousel-btn prev" aria-label="Previous slide">&#8249;</button>
-          <button class="carousel-btn next" aria-label="Next slide">&#8250;</button>
-          <div class="carousel-dots" role="tablist" aria-label="Choose slide"></div>
+          <button class="carousel-btn prev" aria-label="Previous photo">&#8249;</button>
+          <button class="carousel-btn next" aria-label="Next photo">&#8250;</button>
+          <p class="carousel-count" aria-live="polite"></p>
         </div>
+        <div class="carousel-thumbs" aria-label="Choose photo"></div>
       </div>
     </section>
 
@@ -136,19 +117,20 @@
           <h2>Tell us about your project</h2>
           <p>Send us the bike, the idea and your timeline. We'll get back to you with next steps and a quote.</p>
           <ul class="contact-list">
-            <!-- TODO: replace placeholder contact details -->
-            <li><span>Email</span><a href="mailto:info@guadaluperivercustoms.com">info@guadaluperivercustoms.com</a></li>
-            <li><span>Phone</span><a href="tel:+18300000000">(830) 000-0000</a></li>
+            <li><span>Email</span><a href="mailto:Nick@guadalupeRiverCustoms.com">Nick@guadalupeRiverCustoms.com</a></li>
+            <li><span>Phone</span><a href="tel:+12104640187">(210) 464-0187</a></li>
             <li><span>Location</span>Seguin, Texas</li>
           </ul>
         </div>
-        <form class="form" data-mailto-form data-subject="Project inquiry">
-          <label>Name<input name="Name" required autocomplete="name"></label>
-          <label>Email<input name="Email" type="email" required autocomplete="email"></label>
-          <label>Phone<input name="Phone" type="tel" autocomplete="tel"></label>
-          <label>Bike (year / make / model)<input name="Bike"></label>
+        <form class="form" action="https://formspree.io/f/xoedqnzv" method="POST" data-formspree
+              data-success="Thanks! Your inquiry was sent. We'll get back to you soon.">
+          <input type="hidden" name="_subject" value="Project inquiry from the website">
+          <label>Name<input name="name" required autocomplete="name"></label>
+          <label>Email<input name="email" type="email" required autocomplete="email"></label>
+          <label>Phone<input name="phone" type="tel" autocomplete="tel"></label>
+          <label>Bike (year / make / model)<input name="bike"></label>
           <label>Type of work
-            <select name="Type of work">
+            <select name="type_of_work">
               <option>Full custom build</option>
               <option>Welding / fabrication</option>
               <option>Repair / maintenance</option>
@@ -156,9 +138,9 @@
               <option>Something else</option>
             </select>
           </label>
-          <label>Project details<textarea name="Details" rows="5" required></textarea></label>
+          <label>Project details<textarea name="message" rows="5" required></textarea></label>
           <button type="submit" class="btn">Send Inquiry</button>
-          <p class="form-note">This opens your email app with the details filled in.</p>
+          <p class="form-status" role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>
@@ -171,6 +153,7 @@
     </div>
   </footer>
 
+  <script src="js/showcase-data.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
